@@ -12,14 +12,18 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <!--[if IE]>
-<script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+      <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
     <script>
         Parse.initialize("r4TUKrkYYipaZmkTKUNGqdYL6H69rm3pauJUddhf");
         Parse.serverURL = 'https://parse.atodd.io:2235/frb';
+        var currentUser = Parse.User.current();
+        if (currentUser) {
+            window.location.href = "main.html";
+        }
     </script>
 </head>
 
@@ -27,7 +31,7 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Collaboration Station</a>
+                <a class="navbar-brand" href="main.html">Collaboration Station</a>
             </div>
         </div>
     </nav>
@@ -44,7 +48,7 @@
         <div class="row">
             <div class="col-sm-6">
                 <h3>Log In</h3>
-                <form id="login">
+                <form id="login" onsubmit="event.preventDefault(); login();">
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
                         <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
@@ -53,12 +57,12 @@
                         <label for="loginPassword">Password</label>
                         <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
                     </div>
-                    <button type="button" class="btn btn-default" onclick="login()">Log In</button>
+                    <button type="submit" class="btn btn-default">Log In</button>
                 </form>
             </div>
             <div class="col-sm-6">
                 <h3>Sign Up</h3>
-                <form id="signup">
+                <form id="signup" onsubmit="event.preventDefault(); signup();">
                     <div class="form-group">
                         <label for="signupName">Full Name</label>
                         <input type="text" class="form-control" id="signupName" placeholder="Name" value="" required>
@@ -74,7 +78,7 @@
                     </div>
                     <div class="form-group">
                         <label for="signupPassword">Confirm Password</label>
-                        <input type="password" class="form-control" id="signupPasswordConfirm" placeholder="Password" value="" required onkeyup="checkPass(); return false;">
+                        <input type="password" class="form-control" id="signupPasswordConfirm" placeholder="Confirm Password" value="" required onkeyup="checkPass(); return false;">
                     </div>
                     <div class="form-group">
                         <label for="userType">I am a</label>
@@ -87,15 +91,15 @@
                     </div>
                     <div class="form-group">
                         <label for="signupInterests">Interests</label>
+                        <span>(seperated by comma)</span>
                         <input type="text" class="form-control" id="signupInterests" placeholder="Interests seperated by comma" value="" required>
                     </div>
-                    <button type="button" class="btn btn-default" id="signupBtn" onclick="signup()">Sign Up</button>
+                    <button type="submit" class="btn btn-default" id="signupBtn">Sign Up</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script>
         function signup() {
@@ -108,8 +112,8 @@
             user.set("userType", type);
             var interests = $("#signupInterests")[0].value;
             var interestsArray = [];
-            $.each(interests.split(","), function(){
-              interestsArray.push($.trim(this));
+            $.each(interests.split(","), function() {
+                interestsArray.push($.trim(this));
             });
             user.set("interests", interestsArray);
             user.signUp(null, {
@@ -125,10 +129,10 @@
         function login() {
             Parse.User.logIn($("#loginEmail")[0].value, $("#loginPassword")[0].value, {
                 success: function(user) {
-                  window.location.href = "main.html";
+                    window.location.href = "main.html";
                 },
                 error: function(user, error) {
-                  alert("Error: " + error.code + " " + error.message);
+                    alert("Error: " + error.code + " " + error.message);
                 }
             });
         }
