@@ -34,7 +34,6 @@
         initPosts.find({
             success: function(results) {
                 $.each(results, function() {
-                  console.log(this);
                     var newPost = [this.get('postTitle'), this.get('poster'), this.get('createdAt'), this.get('postText')];
                     postsArray.unshift(newPost);
                 });
@@ -77,6 +76,7 @@
 
         var Posts = Parse.Object.extend("Posts");
         var query = new Parse.Query(Posts);
+        query.include("poster");
         var subscription = query.subscribe();
 
         subscription.on('open', () => {
@@ -125,7 +125,7 @@
         <div class="row">
             <div class="col-sm-12 col-lg-8">
                 <h3>Feed</h3>
-                <form onsubmit="event.preventDefault(); submitPost();">
+                <form id="newPost" onsubmit="event.preventDefault(); submitPost();">
                     <div class="form-group">
                         <input type="text" class="form-control" id="newPostTitle" placeholder="Subject">
                     </div>
@@ -187,7 +187,7 @@
                 poster: currentUser
             }, {
                 success: function(post) {
-
+                    $("#newPost")[0].reset();
                 },
                 error: function(post, error) {
                     alert('Failed to create new object, with error code: ' + error.message);
