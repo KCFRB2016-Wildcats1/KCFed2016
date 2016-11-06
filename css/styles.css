@@ -14,8 +14,18 @@ By Alex Todd
   background-color: rgba(185, 139, 185, 0.5);
 }
 
-.lane-sidebar {
+.sidebar {
   position: fixed;
+  top: 100px;
+  right: 25px;
+}
+
+@media screen and (max-width: 1200px) {
+  .sidebar {
+    position: inherit;
+    top: inherit;
+    right: inherit;
+  }
 }
 
 .post, .event, .group {
@@ -29,8 +39,6 @@ By Alex Todd
 
   padding: 5px;
 }
-
-
 
 body {
   padding-top: 100px;
