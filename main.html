@@ -175,7 +175,11 @@
         function updatePosts() {
             var postsString = "";
             $.each(postsArray, function() {
-                postsString += '<article class="post"><h4><strong>' + this[0] + '</strong></h4><section align="right">' + this[1].get('name') + ' on ' + this[2].toLocaleString() + '</section><hr /><p class="post-text">' + this[3] + '</p></article>';
+              var link = "viewprofile.html?user="+this[1].get('username');
+              if (this[1].get('username') == currentUser.get('username')){
+                link = "profile.html";
+              }
+                postsString += '<article class="post"><h4><strong>' + this[0] + '</strong></h4><section align="right"><a href="'+link+'">' + this[1].get('name') + '</a> on ' + this[2].toLocaleString() + '</section><hr /><p class="post-text">' + this[3] + '</p></article>';
             });
             $("#postWrapper").html(postsString);
         }
