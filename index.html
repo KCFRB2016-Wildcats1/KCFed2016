@@ -27,77 +27,80 @@
     </script>
 </head>
 
-<body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+<body class="login-page">
+    <nav class="navbar navbar-inverse navbar-fixed-top lane-navbar">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="main.html">Collaboration Station</a>
+                <a class="navbar-brand" href="#"></a>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12" id="about">
-                <h3>About Collaboration Station</h3>
-                <p>Vinyl polaroid master cleanse williamsburg, bitters sustainable pop-up narwhal migas photo booth vexillologist tacos cred. Chia edison bulb pok pok, mixtape master cleanse bicycle rights VHS bushwick. Occupy VHS mumblecore, beard aesthetic
-                    tote bag tbh meggings hoodie. Salvia kogi af, jianbing pok pok master cleanse blog. Flannel ennui polaroid helvetica occupy. Bushwick meggings vaporware, blog pork belly dreamcatcher ethical air plant disrupt mumblecore knausgaard
-                    unicorn XOXO scenester tilde. Drinking vinegar four dollar toast XOXO, tilde single-origin coffee schlitz snackwave seitan tumblr bushwick tote bag yr banjo.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <h3>Log In</h3>
-                <form id="login" onsubmit="event.preventDefault(); login();">
-                    <div class="form-group">
-                        <label for="loginEmail">Email</label>
-                        <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Password</label>
-                        <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
-                    </div>
-                    <button type="submit" class="btn btn-default">Log In</button>
-                </form>
-            </div>
-            <div class="col-sm-6">
-                <h3>Sign Up</h3>
-                <form id="signup" onsubmit="event.preventDefault(); signup();">
-                    <div class="form-group">
-                        <label for="signupName">Full Name</label>
-                        <input type="text" class="form-control" id="signupName" placeholder="Name" value="" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signupEmail">Email</label>
-                        <input type="email" class="form-control" id="signupEmail" placeholder="Email" value="" required>
-                    </div>
+        <div class="container index-bg">
 
-                    <div class="form-group">
-                        <label for="signupPassword">Password</label>
-                        <input type="password" class="form-control" id="signupPassword" placeholder="Password" value="" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signupPassword">Confirm Password</label>
-                        <input type="password" class="form-control" id="signupPasswordConfirm" placeholder="Confirm Password" value="" required onkeyup="checkPass(); return false;">
-                    </div>
-                    <div class="form-group">
-                        <label for="userType">I am a</label>
-                        <select name="userType" id="signupType" required>
-                          <option value="" default></option>
-                          <option value="volunteer">Volunteer</option>
-                          <option value="student">Student</option>
-                          <option value="advisor">Advisor</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="signupInterests">Interests</label>
-                        <span>(seperated by comma)</span>
-                        <input type="text" class="form-control" id="signupInterests" placeholder="Interests seperated by comma" value="" required>
-                    </div>
-                    <button type="submit" class="btn btn-default" id="signupBtn">Sign Up</button>
-                </form>
+            <div class="row white-text">
+              <div class="title-Col">
+                <h1 align="center">Collaboration Station</h1>
+              </div>
+                <div class="col-sm-3 col-sm-offset-1 move-down">
+                    <h2 align="center">Log In</h2>
+                     <form id="login">
+                        <div class="form-group1">
+                             <label for="loginEmail">Email</label>
+                             <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
+                         </div>
+                        <div class="form-group1">
+                             <label for="loginPassword">Password</label>
+                             <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                         </div>
+                         <button type="button" class="btn btn-default" onclick="login()">Log In</button>
+                     </form>
+                 </div>
+                <div class="col-sm-3 col-sm-offset-4">
+                    <h2 align="center">Sign Up</h2>
+                     <form id="signup" onsubmit="event.preventDefault(); signup();">
+                        <div class="form-group1">
+                             <label for="signupName">Full Name</label>
+                             <input type="text" class="form-control" id="signupName" placeholder="Name" value="" required>
+                         </div>
+                        <div class="form-group1">
+                             <label for="signupEmail">Email</label>
+                             <input type="email" class="form-control" id="signupEmail" placeholder="Email" value="" required>
+                         </div>
+
+                        <div class="form-group1">
+                             <label for="signupPassword">Password</label>
+                             <input type="password" class="form-control" id="signupPassword" placeholder="Password" value="" required>
+                         </div>
+                        <div class="form-group1">
+                             <label for="signupPassword">Confirm Password</label>
+                             <input type="password" class="form-control" id="signupPasswordConfirm" placeholder="Password" value="" required onkeyup="checkPass(); return false;">
+                         </div>
+                       <div class="form-group1">
+                             <label for="userType">I am a</label>
+                             <select name="userType" id="signupType" required>
+                               <option value="" default></option>
+                               <option value="volunteer">Volunteer</option>
+                               <option value="student">Student</option>
+                               <option value="advisor">Advisor</option>
+                            </select>
+                         </div>
+                        <div class="form-group1">
+                             <label for="signupInterests">Interests</label>
+                             <span>(separated by comma)</span>
+                             <input type="text" class="form-control" id="signupInterests" placeholder="Interests seperated by comma" value="" required>
+                         </div>
+                          <button type="submit" class="btn btn-default" id="signupBtn">Sign Up</button>
+                     </form>
+                 </div>
+             </div>
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1" id="about">
+                <p align="center">Collaboration Station works to bring volunteers with technical skills together with the students who show an interest in learning and developing these skills.  Collaboration Station is a data-driven effort to make it easier for organizers to find capable volunteers for their events and for volunteers to find opportunities to make a difference in their communities.
+    Built upon a Javascript base and supported by a Mongo Database, Collaboration Station is a user-focused web application that focuses on bringing people together to explore and learn about technology.</p>
             </div>
         </div>
+
     </div>
 
     <script src="js/bootstrap.min.js"></script>
