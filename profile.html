@@ -53,17 +53,16 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-offset-1 col-sm-10">
-                <h3>Boaty McBoatFace</h3>
-                <img class="profilePicture" src="https://baconmockup.com/150/150/" alt="Boaty McBoatFace" />
+                <h3 id="name"></h3>
+                <span id="email"></span>
                 <hr />
                 <h4>About</h4>
-                <span>Email: boaty@mcboatface.com</span>
-                <br />
-                <article class="biography">
-                  <p>Vinyl polaroid master cleanse williamsburg, bitters sustainable pop-up narwhal migas photo booth vexillologist tacos cred. Chia edison bulb pok pok, mixtape master cleanse bicycle rights VHS bushwick. Occupy VHS mumblecore, beard
-                      aesthetic tote bag tbh meggings hoodie. Salvia kogi af, jianbing pok pok master cleanse blog. Flannel ennui polaroid helvetica occupy. Bushwick meggings vaporware, blog pork belly dreamcatcher ethical air plant disrupt mumblecore
-                      knausgaard unicorn XOXO scenester tilde. Drinking vinegar four dollar toast XOXO, tilde single-origin coffee schlitz snackwave seitan tumblr bushwick tote bag yr banjo.</p>
-                </article>
+                <form id="biography" onsubmit="event.preventDefault(); updateBio();">
+                    <div class="form-group">
+                      <textarea id="bio" value=""></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-default">Update Bio</button>
+                </form>
                 <hr />
                 <h4>Groups</h4>
                 <span class="profileGroup">ACM</span>
@@ -85,6 +84,25 @@
                 var currentUser = Parse.User.current();
                 window.location.href = "index.html";
             });
+        }
+
+        $("#name").html(currentUser.get('name'));
+        $("#email").html(currentUser.get('email'));
+        Parse.User.current().fetch().then(function(user) {
+          $("#bio").val(user.get('bio'));
+        });
+
+        function updateBio(){
+          currentUser.save({
+              bio: $("#bio")[0].value,
+          }, {
+              success: function(user) {
+                  window.location.href = "profile.html";
+              },
+              error: function(user, error) {
+                  alert("Error: " + error.code + " " + error.message);
+              }
+          });
         }
     </script>
 </body>

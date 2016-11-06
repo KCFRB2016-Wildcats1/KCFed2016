@@ -88,3 +88,8 @@ input:invalid {
 input:valid {
   border: 1px solid green;
 }
+
+textarea {
+  width: 500px;
+  height: 150px;
+}
