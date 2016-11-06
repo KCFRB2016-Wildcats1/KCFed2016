@@ -26,8 +26,7 @@
         } else {
             window.location.href = "index.html";
         }
-    </script>
-    <script>
+
         var Posts = Parse.Object.extend("Posts");
         var query = new Parse.Query(Posts);
         var subscription = query.subscribe();
@@ -39,7 +38,7 @@
         });
 
         subscription.on('create', function(obj) {
-          var postsString = "";
+            var postsString = "";
             var newPost = [obj.get('postTitle'), obj.get('poster'), obj.get('createdAt'), obj.get('postText')];
             postsArray.unshift(newPost);
             $.each(postsArray, function() {
