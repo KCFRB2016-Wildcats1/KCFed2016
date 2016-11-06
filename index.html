@@ -16,7 +16,7 @@
       <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
     <script>
         Parse.initialize("r4TUKrkYYipaZmkTKUNGqdYL6H69rm3pauJUddhf");
         Parse.serverURL = 'https://parse.atodd.io:2235/frb';
@@ -104,19 +104,19 @@
     <script>
         function signup() {
             var user = new Parse.User();
-            user.set("name", $("#signupName")[0].value);
-            user.set("username", $("#signupEmail")[0].value);
-            user.set("email", $("#signupEmail")[0].value);
-            user.set("password", $("#signupPassword")[0].value);
-            var type = [$("#signupType")[0].value];
-            user.set("userType", type);
             var interests = $("#signupInterests")[0].value;
             var interestsArray = [];
             $.each(interests.split(","), function() {
                 interestsArray.push($.trim(this));
             });
-            user.set("interests", interestsArray);
-            user.signUp(null, {
+            user.signUp({
+                name: $("#signupName")[0].value,
+                username: $("#signupEmail")[0].value,
+                email: $("#signupEmail")[0].value,
+                password: $("#signupPassword")[0].value,
+                userType: [$("#signupType")[0].value],
+                interests: interestsArray
+            }, {
                 success: function(user) {
                     window.location.href = "main.html";
                 },
