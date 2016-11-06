@@ -27,32 +27,73 @@
             window.location.href = "index.html";
         }
 
+        var postsArray = [];
+
+        var initPosts = new Parse.Query(Parse.Object.extend("Posts"));
+        initPosts.find({
+            success: function(results) {
+                $.each(results, function() {
+                    var newPost = [this.get('postTitle'), this.get('poster'), this.get('createdAt'), this.get('postText')];
+                    postsArray.unshift(newPost);
+                });
+                updatePosts();
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+
+        var events = new Parse.Query(Parse.Object.extend("Events"));
+        events.limit(3);
+        events.find({
+            success: function(results) {
+                var eventsString = "";
+                $.each(results, function() {
+                    eventsString += '<article class="event"><h5>' + this.get("eventName") + '</h5><section class="eventInfo">' + this.get("eventTime").toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+','+this.get("eventLocation").longitude+',19z" target="_blank">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
+                });
+                $("#eventsWrapper").html(eventsString);
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+
+        var groups = new Parse.Query(Parse.Object.extend("Groups"));
+        groups.limit(3);
+        groups.find({
+            success: function(results) {
+                var groupsString = "";
+                $.each(results, function() {
+                    groupsString += '<article class="group"><h5>' + this.get("name") + '</h5><section class="groupInfo">' + this.get("description")+'</section></article>';
+                });
+                $("#groupsWrapper").html(groupsString);
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+
         var Posts = Parse.Object.extend("Posts");
         var query = new Parse.Query(Posts);
         var subscription = query.subscribe();
 
-        var postsArray = [];
-
         subscription.on('open', () => {
-            console.log('socket connection established');
+            console.log('Connection Opened');
         });
 
         subscription.on('create', function(obj) {
             var postsString = "";
             var newPost = [obj.get('postTitle'), obj.get('poster'), obj.get('createdAt'), obj.get('postText')];
             postsArray.unshift(newPost);
-            $.each(postsArray, function() {
-                postsString += '<article class="post"><h4>' + this[0] + '</h4><section>Posted by ' + this[1].name + ' on ' + this[2] + '</section><hr /><p>' + this[3] + '</p></article>';
-            });
-            $("#postWrapper").html(postsString);
+            updatePosts();
         });
 
         subscription.on('close', () => {
-            console.log('socket connection closed');
+            console.log('Connection Closed');
         });
 
         subscription.on('error', (error) => {
-            console.log('socket connection error');
+            console.log('Connection Error');
         });
     </script>
 </head>
@@ -105,27 +146,13 @@
                     </form>
                     <div>
                         <h4>Events</h4>
-                        <article class="event">
-                            <h5>Hack K-State</h5>
-                            <section class="eventInfo">Friday, November 11, 2016 @ 6pm<br />K-State Engineering Hall</section>
-                        </article>
-                        <article class="event">
-                            <h5>Hack K-State</h5>
-                            <section class="eventInfo">Friday, November 11, 2016 @ 6pm<br />K-State Engineering Hall</section>
-                        </article>
+                        <div id="eventsWrapper"></div>
                         <span>More Events...</span>
                     </div>
                     <hr />
                     <div>
                         <h4>Groups</h4>
-                        <article class="group">
-                            <h5>ACM</h5>
-                            <section class="groupInfo">This is acm.</section>
-                        </article>
-                        <article class="group">
-                            <h5>ACM</h5>
-                            <section class="groupInfo">This is acm.</section>
-                        </article>
+                        <div id="groupsWrapper"></div>
                         <span>More Groups...</span>
                     </div>
                 </div>
@@ -140,6 +167,14 @@
                 var currentUser = Parse.User.current();
                 window.location.href = "index.html";
             });
+        }
+
+        function updatePosts() {
+            var postsString = "";
+            $.each(postsArray, function() {
+                postsString += '<article class="post"><h4>' + this[0] + '</h4><section>Posted by ' + this[1].get('name') + ' on ' + this[2].toLocaleString() + '</section><hr /><p>' + this[3] + '</p></article>';
+            });
+            $("#postWrapper").html(postsString);
         }
 
         function submitPost() {
