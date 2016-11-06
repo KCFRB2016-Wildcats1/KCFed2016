@@ -30,9 +30,11 @@
         var postsArray = [];
 
         var initPosts = new Parse.Query(Parse.Object.extend("Posts"));
+        initPosts.include("poster");
         initPosts.find({
             success: function(results) {
                 $.each(results, function() {
+                  console.log(this);
                     var newPost = [this.get('postTitle'), this.get('poster'), this.get('createdAt'), this.get('postText')];
                     postsArray.unshift(newPost);
                 });
@@ -147,13 +149,11 @@
                     <div>
                         <h4>Events</h4>
                         <div id="eventsWrapper"></div>
-                        <span>More Events...</span>
                     </div>
                     <hr />
                     <div>
                         <h4>Groups</h4>
                         <div id="groupsWrapper"></div>
-                        <span>More Groups...</span>
                     </div>
                 </div>
             </div>
