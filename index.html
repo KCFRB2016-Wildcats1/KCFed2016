@@ -106,7 +106,7 @@
             user.set("password", $("#signupPassword")[0].value);
             var type = [$("#signupType")[0].value];
             user.set("userType", type);
-            user.set("interests", $("#signupInterests")[0].value.split(","));
+            user.set("interests", $("#signupInterests")[0].value.split(",").trim());
             user.signUp(null, {
                 success: function(user) {
                     window.location.href = "main.html";
