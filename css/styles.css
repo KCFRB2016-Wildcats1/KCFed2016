@@ -11,10 +11,30 @@ By Alex Todd
 */
 
 body {
-  padding-top: 50px;
+  padding-top: 100px;
 }
 
-.centered {
-  padding: 40px 15px;
-  text-align: center;
+hr {
+  margin: 8px 0px;
+}
+
+#postWrapper, #eventWrapper {
+  margin-top: 25px;
+}
+
+.post, .searchResult {
+  border-radius: 5px;
+  border: 1px solid #666;
+  padding: 15px 15px 5px 15px;
+}
+
+.event, .group {
+  border-radius: 5px;
+  border: 1px solid #666;
+  padding: 0 15px 5px 15px;
+  margin: 5px 0px 10px 0px;
+}
+
+.searchResult {
+  margin-top: 25px;
 }
