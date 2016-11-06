@@ -10,6 +10,28 @@ By Alex Todd
 ---------------------------------------------------
 */
 
+.main-page {
+  background-color: rgba(185, 139, 185, 0.5);
+}
+
+.lane-sidebar {
+  position: fixed;
+}
+
+.post, .event, .group {
+  background-color: #fff;
+}
+
+.post-text {
+
+}
+.feed-post {
+
+  padding: 5px;
+}
+
+
+
 body {
   padding-top: 100px;
 }

@@ -50,7 +50,7 @@
             success: function(results) {
                 var eventsString = "";
                 $.each(results, function() {
-                    eventsString += '<article class="event"><h5>' + this.get("eventName") + '</h5><section class="eventInfo">' + this.get("eventTime").toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+','+this.get("eventLocation").longitude+',19z" target="_blank">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
+                    eventsString += '<article class="event"><h5><strong>' + this.get("eventName") + '</strong></h5><section class="eventInfo" align="right">' + this.get("eventTime").toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+','+this.get("eventLocation").longitude+',19z" target="_blank" align="right">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
                 });
                 $("#eventsWrapper").html(eventsString);
             },
@@ -65,7 +65,7 @@
             success: function(results) {
                 var groupsString = "";
                 $.each(results, function() {
-                    groupsString += '<article class="group"><h5>' + this.get("name") + '</h5><section class="groupInfo">' + this.get("description")+'</section></article>';
+                    groupsString += '<article class="group"><h5><strong>' + this.get("name") + '</strong></h5><section class="groupInfo">' + this.get("description")+'</section></article>';
                 });
                 $("#groupsWrapper").html(groupsString);
             },
@@ -100,7 +100,7 @@
     </script>
 </head>
 
-<body>
+<body class="main-page">
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -124,7 +124,8 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-lg-8">
-                <h3>Feed</h3>
+              <div class="feed-post">
+                <h3>Create a Post</h3>
                 <form id="newPost" onsubmit="event.preventDefault(); submitPost();">
                     <div class="form-group">
                         <input type="text" class="form-control" id="newPostTitle" placeholder="Subject" required onkeyup="checkPost(); return false;">
@@ -134,10 +135,12 @@
                     </div>
                     <button type="submit" class="btn btn-default" id="postBtn" disabled>Post</button>
                 </form>
+              </div>
+              <h3>Feed</h3>
                 <div id="postWrapper">
                 </div>
             </div>
-            <div class="col-sm-12 col-lg-4">
+            <div class="col-sm-12 col-lg-4 col-sm-offset-6 lane-sidebar">
                 <h3>Sidebar</h3>
                 <div id="trayWrapper">
                     <form>
@@ -172,7 +175,7 @@
         function updatePosts() {
             var postsString = "";
             $.each(postsArray, function() {
-                postsString += '<article class="post"><h4>' + this[0] + '</h4><section>Posted by ' + this[1].get('name') + ' on ' + this[2].toLocaleString() + '</section><hr /><p>' + this[3] + '</p></article>';
+                postsString += '<article class="post"><h4><strong>' + this[0] + '</strong></h4><section align="right">' + this[1].get('name') + ' on ' + this[2].toLocaleString() + '</section><hr /><p class="post-text">' + this[3] + '</p></article>';
             });
             $("#postWrapper").html(postsString);
         }
