@@ -26,6 +26,7 @@ hr {
   border-radius: 5px;
   border: 1px solid #666;
   padding: 15px 15px 5px 15px;
+  margin-bottom: 15px;
 }
 
 .event, .group {

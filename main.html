@@ -16,7 +16,7 @@
       <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://www.parsecdn.com/js/parse-1.6.14.min.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
     <script>
         Parse.initialize("r4TUKrkYYipaZmkTKUNGqdYL6H69rm3pauJUddhf");
         Parse.serverURL = 'https://parse.atodd.io:2235/frb';
@@ -26,6 +26,75 @@
         } else {
             window.location.href = "index.html";
         }
+
+        var postsArray = [];
+
+        var initPosts = new Parse.Query(Parse.Object.extend("Posts"));
+        initPosts.find({
+            success: function(results) {
+                $.each(results, function() {
+                    var newPost = [this.get('postTitle'), this.get('poster'), this.get('createdAt'), this.get('postText')];
+                    postsArray.unshift(newPost);
+                });
+                updatePosts();
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+
+        var events = new Parse.Query(Parse.Object.extend("Events"));
+        events.limit(3);
+        events.find({
+            success: function(results) {
+                var eventsString = "";
+                $.each(results, function() {
+                    eventsString += '<article class="event"><h5>' + this.get("eventName") + '</h5><section class="eventInfo">' + this.get("eventTime").toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+','+this.get("eventLocation").longitude+',19z" target="_blank">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
+                });
+                $("#eventsWrapper").html(eventsString);
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+
+        var groups = new Parse.Query(Parse.Object.extend("Groups"));
+        groups.limit(3);
+        groups.find({
+            success: function(results) {
+                var groupsString = "";
+                $.each(results, function() {
+                    groupsString += '<article class="group"><h5>' + this.get("name") + '</h5><section class="groupInfo">' + this.get("description")+'</section></article>';
+                });
+                $("#groupsWrapper").html(groupsString);
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+
+        var Posts = Parse.Object.extend("Posts");
+        var query = new Parse.Query(Posts);
+        var subscription = query.subscribe();
+
+        subscription.on('open', () => {
+            console.log('Connection Opened');
+        });
+
+        subscription.on('create', function(obj) {
+            var postsString = "";
+            var newPost = [obj.get('postTitle'), obj.get('poster'), obj.get('createdAt'), obj.get('postText')];
+            postsArray.unshift(newPost);
+            updatePosts();
+        });
+
+        subscription.on('close', () => {
+            console.log('Connection Closed');
+        });
+
+        subscription.on('error', (error) => {
+            console.log('Connection Error');
+        });
     </script>
 </head>
 
@@ -52,26 +121,18 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12 col-lg-8">
                 <h3>Feed</h3>
-                <form>
+                <form onsubmit="event.preventDefault(); submitPost();">
                     <div class="form-group">
-                        <input type="email" class="form-control" id="newPost" placeholder="How can you get involved?">
+                        <input type="text" class="form-control" id="newPostTitle" placeholder="Subject">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="newPostText" placeholder="How can you get involved?">
                     </div>
                     <button type="submit" class="btn btn-default">Post</button>
                 </form>
                 <div id="postWrapper">
-                    <article class="post">
-                        <h4>My Cool Post Title</h4>
-                        <section>Posted by Hipster 12 hours ago</section>
-                        <hr />
-                        <p>Vinyl polaroid master cleanse williamsburg, bitters sustainable pop-up narwhal migas photo booth vexillologist tacos cred. Chia edison bulb pok pok, mixtape master cleanse bicycle rights VHS bushwick. Occupy VHS mumblecore, beard
-                            aesthetic tote bag tbh meggings hoodie. Salvia kogi af, jianbing pok pok master cleanse blog. Flannel ennui polaroid helvetica occupy. Bushwick meggings vaporware, blog pork belly dreamcatcher ethical air plant disrupt mumblecore
-                            knausgaard unicorn XOXO scenester tilde. Drinking vinegar four dollar toast XOXO, tilde single-origin coffee schlitz snackwave seitan tumblr bushwick tote bag yr banjo.</p>
-                        <p>Intelligentsia bicycle rights kitsch fingerstache, celiac letterpress vexillologist hashtag. Chartreuse vexillologist forage hashtag, neutra skateboard pitchfork. Kickstarter 90's kinfolk hashtag VHS pour-over. Locavore flannel
-                            pug selfies. Artisan hammock paleo flexitarian migas try-hard. Green juice kickstarter yuccie ennui. Pour-over whatever aesthetic, ramps chillwave wayfarers you probably haven't heard of them +1 slow-carb hella single-origin
-                            coffee flannel.</p>
-                    </article>
                 </div>
             </div>
             <div class="col-sm-12 col-lg-4">
@@ -85,27 +146,13 @@
                     </form>
                     <div>
                         <h4>Events</h4>
-                        <article class="event">
-                            <h5>Hack K-State</h5>
-                            <section class="eventInfo">Friday, November 11, 2016 @ 6pm<br />K-State Engineering Hall</section>
-                        </article>
-                        <article class="event">
-                            <h5>Hack K-State</h5>
-                            <section class="eventInfo">Friday, November 11, 2016 @ 6pm<br />K-State Engineering Hall</section>
-                        </article>
+                        <div id="eventsWrapper"></div>
                         <span>More Events...</span>
                     </div>
                     <hr />
                     <div>
                         <h4>Groups</h4>
-                        <article class="group">
-                            <h5>ACM</h5>
-                            <section class="groupInfo">This is acm.</section>
-                        </article>
-                        <article class="group">
-                            <h5>ACM</h5>
-                            <section class="groupInfo">This is acm.</section>
-                        </article>
+                        <div id="groupsWrapper"></div>
                         <span>More Groups...</span>
                     </div>
                 </div>
@@ -119,6 +166,32 @@
             Parse.User.logOut().then(() => {
                 var currentUser = Parse.User.current();
                 window.location.href = "index.html";
+            });
+        }
+
+        function updatePosts() {
+            var postsString = "";
+            $.each(postsArray, function() {
+                postsString += '<article class="post"><h4>' + this[0] + '</h4><section>Posted by ' + this[1].get('name') + ' on ' + this[2].toLocaleString() + '</section><hr /><p>' + this[3] + '</p></article>';
+            });
+            $("#postWrapper").html(postsString);
+        }
+
+        function submitPost() {
+            var user = Parse.Object.extend(Parse.User);
+            var Post = Parse.Object.extend("Posts");
+            var post = new Post();
+            post.save({
+                postTitle: $("#newPostTitle")[0].value,
+                postText: $("#newPostText")[0].value,
+                poster: currentUser
+            }, {
+                success: function(post) {
+
+                },
+                error: function(post, error) {
+                    alert('Failed to create new object, with error code: ' + error.message);
+                }
             });
         }
     </script>
