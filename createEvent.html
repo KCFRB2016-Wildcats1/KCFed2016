@@ -80,7 +80,11 @@
                         <label for="eventName">Number of Volunteers</label>
                         <input type="number" class="form-control" id="volunteers" min="0" value="" required>
                     </div>
-                    <button type="submit" class="btn btn-default">Search</button>
+                    <div class="form-group">
+                        <label for="eventDescription">Event Description</label>
+                        <input type="text" class="form-control" id="eventDescription" value="" required>
+                    </div>
+                    <button type="submit" class="btn btn-default">Create Event</button>
                 </form>
             </div>
         </div>
@@ -115,10 +119,11 @@
                 eventInterests: interestsArray,
                 eventLocation: gp,
                 volunteers: parseInt($("#volunteers")[0].value),
+                details: $("#eventDescription")[0].value,
                 createdBy: currentUser
             }, {
                 success: function(post) {
-                    $("#createEvent")[0].reset();
+                    window.location.href = "main.html";
                 },
                 error: function(post, error) {
                     alert('Failed to create new event, with error code: ' + error.message);

@@ -26,6 +26,38 @@
         } else {
             window.location.href = "index.html";
         }
+        var param1var = getQueryVariable("event");
+
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("?");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) {
+                    return pair[1];
+                }
+            }
+            console.log('Query Variable ' + variable + ' not found');
+        }
+
+        var theEvent;
+        var query = new Parse.Query(Parse.Object.extend("Events"));
+        query.equalTo("objectId", param1var);
+        query.limit(1);
+        query.find({
+            success: function(eevent) {
+                theEvent = eevent[0];
+                $("#eventName").html(eevent[0].get('eventName'));
+                var date = new Date(eevent[0].get("eventDate"));
+                $("#eventDetails").html(eevent[0].get("details"));
+                $("#eventDate").html(date.toLocaleString());
+                $("#eventLocation").html(eevent[0].get('eventLocation').latitude + ', ' + eevent[0].get('eventLocation').longitude);
+                $("#volNum").html(theEvent.get('volunteers') + ' Volunteers Needed');
+            },
+            error: function(user, error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
     </script>
 </head>
 
@@ -54,25 +86,20 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-offset-1 col-sm-10">
-                <h3>Hack K-State</h3>
-                <img class="profilePicture" src="https://baconmockup.com/500/250/" alt="Hack K-State" />
+                <h3 id="eventName"></h3>
+                <span id="eventDate"></span><br />
+                <span id="eventLocation"></span>
                 <hr />
                 <h4>About</h4>
-                <span>November 11-13, 2016</span><br />
-                <span>K-State Engineering Hall</span><br />
-                <article class="biography">
-                  <p>Vinyl polaroid master cleanse williamsburg, bitters sustainable pop-up narwhal migas photo booth vexillologist tacos cred. Chia edison bulb pok pok, mixtape master cleanse bicycle rights VHS bushwick. Occupy VHS mumblecore, beard
-                      aesthetic tote bag tbh meggings hoodie. Salvia kogi af, jianbing pok pok master cleanse blog. Flannel ennui polaroid helvetica occupy. Bushwick meggings vaporware, blog pork belly dreamcatcher ethical air plant disrupt mumblecore
-                      knausgaard unicorn XOXO scenester tilde. Drinking vinegar four dollar toast XOXO, tilde single-origin coffee schlitz snackwave seitan tumblr bushwick tote bag yr banjo.</p>
-                </article>
+                <p id="eventDetails"></p>
                 <hr />
                 <h4>Volunteers</h4>
-                <span class="profileGroup">Bob</span>
-                <span class="profileGroup">John</span>
-                <span class="profileGroup">Doe</span>
-                <hr />
-                <h4>Map</h4>
-                <img class="profilePicture" src="https://baconmockup.com/700/400/" />
+                <div id="volunteersWrapper"></div>
+                <span id="volunteers"></span>
+                <span id="volNum"></span>
+                <form id="volEvent" onsubmit="event.preventDefault(); volunteer();">
+                    <button type="submit" class="btn btn-default">Volunteer for this Event</button>
+                </form>
             </div>
         </div>
     </div>
@@ -83,6 +110,21 @@
             Parse.User.logOut().then(() => {
                 var currentUser = Parse.User.current();
                 window.location.href = "index.html";
+            });
+        }
+
+        function volunteer() {
+            var NewEvent = Parse.Object.extend("Events");
+            var newEvent = new NewEvent();
+            newEvent.id = theEvent.id;
+            newEvent.set("volunteers", theEvent.get('volunteers') - 1);
+            newEvent.save(null, {
+                success: function(point) {
+                    window.location.href = "event.html?event=" + theEvent.id;
+                },
+                error: function(point, error) {
+                    alert("Error: " + error.code + " " + error.message);
+                }
             });
         }
     </script>

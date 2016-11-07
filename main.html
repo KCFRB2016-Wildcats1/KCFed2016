@@ -51,7 +51,7 @@
                 var eventsString = "";
                 $.each(results, function() {
                     var date = new Date(this.get("eventDate"));
-                    eventsString += '<article class="event"><h5><strong>' + this.get("eventName") + '</strong></h5><section class="eventInfo" align="right">' + date.toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+','+this.get("eventLocation").longitude+',19z" target="_blank" align="right">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
+                    eventsString += '<article class="event"><h5><a href="event.html?event='+this.id+'"><strong>' + this.get("eventName") + '</strong></a></h5><section class="eventInfo" align="right">' + date.toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+', '+this.get("eventLocation").longitude+',19z" target="_blank" align="right">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
                 });
                 $("#eventsWrapper").html(eventsString);
             },
