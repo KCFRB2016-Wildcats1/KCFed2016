@@ -50,6 +50,12 @@
               $("#name").html(user[0].get('name'));
               $("#email").html(user[0].get('email'));
               $("#biography").html(user[0].get('bio'));
+              var interests = user[0].get('interests');
+              var interestsString = "";
+              $.each(interests, function() {
+                  interestsString += '<span class="interest">'+this+'</span><br />';
+              });
+              $("#interestsWrapper").html(interestsString);
             },
             error: function(user, error) {
                 alert("Error: " + error.code + " " + error.message);
@@ -89,15 +95,8 @@
                 <h4>About</h4>
                 <p id="biography"></p>
                 <hr />
-                <h4>Groups</h4>
-                <span class="profileGroup">ACM</span>
-                <span class="profileGroup">MDC</span>
-                <span class="profileGroup">CDC</span>
-                <hr />
                 <h4>Interests</h4>
-                <span class="profileGroup">Things</span>
-                <span class="profileGroup">n'</span>
-                <span class="profileGroup">Stuff</span>
+                <div id="interestsWrapper"></div>
             </div>
         </div>
     </div>
