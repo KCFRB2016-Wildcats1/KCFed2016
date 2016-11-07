@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta name="description" content="Bootstrap 3.3.4 Template">
+    <meta name="author" content="Alex Todd">
+    <title>Collaboration Station</title>
+    <link rel="shortcut icon" href="#">
+    <link rel="apple-touch-icon-precomposed" href="#" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <!--[if IE]>
+      <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+    <script>
+        Parse.initialize("r4TUKrkYYipaZmkTKUNGqdYL6H69rm3pauJUddhf");
+        Parse.serverURL = 'https://parse.atodd.io:2235/frb';
+        var currentUser = Parse.User.current();
+        if (currentUser) {
+
+        } else {
+            window.location.href = "index.html";
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </button>
+                <a class="navbar-brand" href="main.html">Collaboration Station</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="profile.html">My Account</a></li>
+                    <li><a href="createEvent.html">Create Event</a></li>
+                    <li><a href="#" onclick="logout()">Log Out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-10">
+                <h3>Create an Event</h3>
+                <form id="createEvent" onsubmit="event.preventDefault(); submitEvent();">
+                    <div class="form-group">
+                        <label for="eventName">Event Name</label>
+                        <input type="text" class="form-control" id="eventName" placeholder="Event Name" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventName">Event Date</label>
+                        <input type="date" class="form-control" id="eventDate" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventName">Event Start Time</label>
+                        <input type="time" class="form-control" id="eventTime" value="" required>
+                    </div>
+                    <!--<div class="form-group">
+                            <label for="eventName">Event Location</label>
+                            <input type="text" class="form-control" id="eventLocation" value="" required>
+                        </div>-->
+                    <div class="form-group">
+                        <label for="eventName">Event Interests (seperated by comma)</label>
+                        <input type="text" class="form-control" id="eventInterests" placeholder="Event Interests (sperated by comma)" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventName">Number of Volunteers</label>
+                        <input type="number" class="form-control" id="volunteers" min="0" value="" required>
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        function logout() {
+            Parse.User.logOut().then(() => {
+                var currentUser = Parse.User.current();
+                window.location.href = "index.html";
+            });
+        }
+
+        function submitEvent() {
+            var user = Parse.Object.extend(Parse.User);
+            var Event = Parse.Object.extend("Events");
+            var eevent = new Event();
+            var eventDate = new Date($("#eventDate")[0].value + " " + $("#eventTime")[0].value);
+            var interests = $("#eventInterests")[0].value;
+            var interestsArray = [];
+            $.each(interests.split(","), function() {
+                interestsArray.push($.trim(this));
+            });
+            var gp = new Parse.GeoPoint({
+                latitude: 0,
+                longitude: 0
+            });
+            eevent.save({
+                eventName: $("#eventName")[0].value,
+                eventDate: eventDate.toString(),
+                eventInterests: interestsArray,
+                eventLocation: gp,
+                volunteers: parseInt($("#volunteers")[0].value),
+                createdBy: currentUser
+            }, {
+                success: function(post) {
+                    $("#createEvent")[0].reset();
+                },
+                error: function(post, error) {
+                    alert('Failed to create new event, with error code: ' + error.message);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
