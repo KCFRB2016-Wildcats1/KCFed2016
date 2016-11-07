@@ -51,7 +51,7 @@
                 var date = new Date(eevent[0].get("eventDate"));
                 $("#eventDetails").html(eevent[0].get("details"));
                 $("#eventDate").html(date.toLocaleString());
-                $("#eventLocation").html(eevent[0].get('eventLocation').latitude + ', ' + eevent[0].get('eventLocation').longitude);
+                $("#eventLocation").html('<a href="https://www.google.com/maps/@'+eevent[0].get('eventLocation').latitude+','+eevent[0].get('eventLocation').longitude+',18z" target="_blank" align="right">' + eevent[0].get('eventLocationName') + '</a>');
                 $("#volNum").html(theEvent.get('volunteers') + ' Volunteers Needed');
             },
             error: function(user, error) {
