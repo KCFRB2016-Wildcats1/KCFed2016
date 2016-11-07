@@ -68,10 +68,6 @@
                         <label for="eventName">Event Start Time</label>
                         <input type="time" class="form-control" id="eventTime" value="" required>
                     </div>
-                    <!--<div class="form-group">
-                            <label for="eventName">Event Location</label>
-                            <input type="text" class="form-control" id="eventLocation" value="" required>
-                        </div>-->
                     <div class="form-group">
                         <label for="eventName">Event Interests (seperated by comma)</label>
                         <input type="text" class="form-control" id="eventInterests" placeholder="Event Interests (sperated by comma)" value="" required>
@@ -83,6 +79,12 @@
                     <div class="form-group">
                         <label for="eventDescription">Event Description</label>
                         <input type="text" class="form-control" id="eventDescription" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription">Event Location</label>
+                        <span>Search for your location.</span>
+                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                        <div id="map"></div>
                     </div>
                     <button type="submit" class="btn btn-default">Create Event</button>
                 </form>
@@ -99,6 +101,12 @@
             });
         }
 
+        var gpName = "";
+        var gp = new Parse.GeoPoint({
+            latitude: 0,
+            longitude: 0
+        });
+
         function submitEvent() {
             var user = Parse.Object.extend(Parse.User);
             var Event = Parse.Object.extend("Events");
@@ -109,15 +117,12 @@
             $.each(interests.split(","), function() {
                 interestsArray.push($.trim(this));
             });
-            var gp = new Parse.GeoPoint({
-                latitude: 0,
-                longitude: 0
-            });
             eevent.save({
                 eventName: $("#eventName")[0].value,
                 eventDate: eventDate.toString(),
                 eventInterests: interestsArray,
                 eventLocation: gp,
+                eventLocationName: gpName,
                 volunteers: parseInt($("#volunteers")[0].value),
                 details: $("#eventDescription")[0].value,
                 createdBy: currentUser
@@ -130,7 +135,118 @@
                 }
             });
         }
+
+        var map;
+
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: 39.197,
+                    lng: -96.585
+                },
+                zoom: 14
+            });
+
+            // Create the search box and link it to the UI element.
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            // Bias the SearchBox results towards current map's viewport.
+            map.addListener('bounds_changed', function() {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            var markers = [];
+            // Listen for the event fired when the user selects a prediction and retrieve
+            // more details for that place.
+            searchBox.addListener('places_changed', function() {
+                var places = searchBox.getPlaces();
+
+                if (places.length == 0) {
+                    return;
+                }
+
+                // Clear out the old markers.
+                markers.forEach(function(marker) {
+                    marker.setMap(null);
+                });
+                markers = [];
+
+                // For each place, get the icon, name and location.
+                var bounds = new google.maps.LatLngBounds();
+                places.forEach(function(place) {
+                    if (!place.geometry) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    var icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+
+                    // Create a marker for each place.
+                    markers.push(new google.maps.Marker({
+                        map: map,
+                        icon: icon,
+                        title: place.name,
+                        position: place.geometry.location
+                    }));
+
+                    if (place.geometry.viewport) {
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+
+                gp = new Parse.GeoPoint({
+                    latitude: markers[0].getPosition().lat().toFixed(7),
+                    longitude: markers[0].getPosition().lng().toFixed(7)
+                });
+                gpName = markers[0].title;
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    var locMarker = new google.maps.Marker({
+                        clickable: false,
+                        icon: new google.maps.MarkerImage('https://maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
+                            new google.maps.Size(22, 22),
+                            new google.maps.Point(0, 18),
+                            new google.maps.Point(11, 11)),
+                        shadow: null,
+                        zIndex: 999,
+                        map: map
+                    });
+
+                    locMarker.setPosition(pos);
+                    map.setCenter(pos);
+                }, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+        }
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS2c6zUHKoJCgYf-C-qusf2Z08U-Qxp0o&libraries=places&callback=initMap" async defer></script>
 </body>
 
 </html>

@@ -45,30 +45,15 @@
         });
 
         var events = new Parse.Query(Parse.Object.extend("Events"));
-        events.limit(3);
+        events.limit(5);
         events.find({
             success: function(results) {
                 var eventsString = "";
                 $.each(results, function() {
                     var date = new Date(this.get("eventDate"));
-                    eventsString += '<article class="event"><h5><a href="event.html?event='+this.id+'"><strong>' + this.get("eventName") + '</strong></a></h5><section class="eventInfo" align="right">' + date.toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+', '+this.get("eventLocation").longitude+',19z" target="_blank" align="right">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
+                    eventsString += '<article class="event"><h5><a href="event.html?event='+this.id+'"><strong>' + this.get("eventName") + '</strong></a></h5><section class="eventInfo" align="right">' + date.toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+','+this.get("eventLocation").longitude+',18z" target="_blank" align="right">' + this.get("eventLocationName") + '</a></section></article>';
                 });
                 $("#eventsWrapper").html(eventsString);
-            },
-            error: function(error) {
-                alert("Error: " + error.code + " " + error.message);
-            }
-        });
-
-        var groups = new Parse.Query(Parse.Object.extend("Groups"));
-        groups.limit(3);
-        groups.find({
-            success: function(results) {
-                var groupsString = "";
-                $.each(results, function() {
-                    groupsString += '<article class="group"><h5><strong>' + this.get("name") + '</strong></h5><section class="groupInfo">' + this.get("description")+'</section></article>';
-                });
-                $("#groupsWrapper").html(groupsString);
             },
             error: function(error) {
                 alert("Error: " + error.code + " " + error.message);
@@ -143,17 +128,12 @@
                 </div>
             </div>
             <div class="col-sm-12 col-lg-4 sidebar">
-                <h3>Events and Groups</h3>
                 <div id="trayWrapper">
                     <div>
                         <h4>Events</h4>
                         <div id="eventsWrapper"></div>
                     </div>
                     <hr />
-                    <div>
-                        <h4>Groups</h4>
-                        <div id="groupsWrapper"></div>
-                    </div>
                 </div>
             </div>
         </div>
