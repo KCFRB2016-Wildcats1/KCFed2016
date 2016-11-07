@@ -50,7 +50,8 @@
             success: function(results) {
                 var eventsString = "";
                 $.each(results, function() {
-                    eventsString += '<article class="event"><h5><strong>' + this.get("eventName") + '</strong></h5><section class="eventInfo" align="right">' + this.get("eventTime").toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+','+this.get("eventLocation").longitude+',19z" target="_blank" align="right">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
+                    var date = new Date(this.get("eventDate"));
+                    eventsString += '<article class="event"><h5><a href="event.html?event='+this.id+'"><strong>' + this.get("eventName") + '</strong></a></h5><section class="eventInfo" align="right">' + date.toLocaleString() + '<br /><a href="https://www.google.com/maps/@'+this.get("eventLocation").latitude+', '+this.get("eventLocation").longitude+',19z" target="_blank" align="right">' + this.get("eventLocation").latitude + ', ' + this.get("eventLocation").longitude + '</a></section></article>';
                 });
                 $("#eventsWrapper").html(eventsString);
             },
@@ -115,6 +116,7 @@
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="profile.html">My Account</a></li>
+                    <li><a href="createEvent.html">Create Event</a></li>
                     <li><a href="" onclick="logout()">Log Out</a></li>
                 </ul>
             </div>
@@ -141,14 +143,8 @@
                 </div>
             </div>
             <div class="col-sm-12 col-lg-4 sidebar">
-                <h3>Sidebar</h3>
+                <h3>Events and Groups</h3>
                 <div id="trayWrapper">
-                    <form>
-                        <div class="form-group">
-                            <input type="search" class="form-control" id="search" placeholder="Search...">
-                        </div>
-                        <button type="submit" class="btn btn-default">Search</button>
-                    </form>
                     <div>
                         <h4>Events</h4>
                         <div id="eventsWrapper"></div>
@@ -175,7 +171,11 @@
         function updatePosts() {
             var postsString = "";
             $.each(postsArray, function() {
-                postsString += '<article class="post"><h4><strong>' + this[0] + '</strong></h4><section align="right">' + this[1].get('name') + ' on ' + this[2].toLocaleString() + '</section><hr /><p class="post-text">' + this[3] + '</p></article>';
+              var link = "viewprofile.html?user="+this[1].get('username');
+              if (this[1].get('username') == currentUser.get('username')){
+                link = "profile.html";
+              }
+                postsString += '<article class="post"><h4><strong>' + this[0] + '</strong></h4><section align="right"><a href="'+link+'">' + this[1].get('name') + '</a> on ' + this[2].toLocaleString() + '</section><hr /><p class="post-text">' + this[3] + '</p></article>';
             });
             $("#postWrapper").html(postsString);
         }
