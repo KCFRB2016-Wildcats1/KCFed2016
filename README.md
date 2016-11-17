@@ -1,6 +1,6 @@
 # KCFed2016
 
-[Website](https://KCFRB2016-Wildcats1.github.io/KCFed2016)
+[Website](https://kcfrb2016-wildcats1.github.io/KCFed2016/)
 
 
 [YouTube Presentation](https://youtu.be/02sIo3d3Oq0)
